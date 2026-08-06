@@ -36,8 +36,14 @@ script:
   - ./test_slimcoin -r short
   - cd ..
   - source /opt/qt55/bin/qt55-env.sh
-  - /opt/qt55/bin/qmake RELEASE=1 USE_QRCODE=1 FIRST_CLASS_MESSAGING=1 USE_UPNPC=1 USE_OLDC=1
-  - CXXFLAGS="-std=c++0x" make -j 5
+  #- /opt/qt55/bin/qmake RELEASE=1 USE_QRCODE=1 FIRST_CLASS_MESSAGING=1 USE_UPNPC=1 USE_OLDC=1
+  # The above original line was replaced with thos following this comment's section because USE_UPNPC is probably a typo, the original value was USE_UPNP, while USE_OLDC is not qmake driective, it's used in src/makefile.unix (to choose -std=c++0x vs -std=c++11) but that is a Makefile variable. Both typos was introduced in 2017 in the same commit
+  #Another point changed in the mentioned line is that.travis.yml used to call qmake without explicitly naming slimcoin-qt.pro (qmake can find a .pro file in cwd, but being explicit is clearer)
+  #Also the quotes was added, since with quotes it should be safer.
+  - /opt/qt55/bin/qmake "RELEASE=1" "USE_QRCODE=1" "FIRST_CLASS_MESSAGING=1" "USE_UPNP=1" slimcoin-qt.pro
+  #- CXXFLAGS="-std=c++0x" make -j 5
+  # The above original line was changed that following this commant, because CXXFLAGS="-std=c++0x" does absolutelly nothing given the context, because the line 'contains(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 4) {' in slimcoin-qt.pro basically defines that for the QT version above 5.4 the C++14 should be used, thus the Makefile created by qmake command above is to compile with C++14
+  - make -j 5
 
 notifications:
   irc:
