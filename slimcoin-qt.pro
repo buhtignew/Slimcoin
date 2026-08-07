@@ -13,6 +13,7 @@ CONFIG += moc
 
 QMAKE_CFLAGS_ISYSTEM=
 # qmake on Qt 5.3 and lower doesn't recognize c++14.
+# buhtignew: The following block means basically that the slimcoin-qt wallet is being compiled with c++14, because the corresponding .travis.yml line (/opt/qt55/bin/qmake "RELEASE=1" "USE_QRCODE=1" "FIRST_CLASS_MESSAGING=1" "USE_UPNP=1" slimcoin-qt.pro) uses Qt 5.5 already. The block is probably useless in case the default c++ version is 14 in context of the OSs where c++14 is default, i.e. from Ubuntu 18.04 on
 contains(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 4) {
     CONFIG += c++11
     QMAKE_CXXFLAGS_CXX11 = $$replace(QMAKE_CXXFLAGS_CXX11, "std=c\+\+11", "std=c++1y")
